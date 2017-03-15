@@ -1,6 +1,6 @@
 <snippet>
   <content><![CDATA[
-#Klaviyo Code Challenge: Weather Powered Email
+# ${1:Klaviyo Code Challenge: Weather Powered Email}
 
 Create an app that allows users to signup to receive an email specific to their current weather by providing their email and selecting the closest of the top 100 most populated US cities to them
 
