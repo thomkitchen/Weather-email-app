@@ -5,6 +5,7 @@ Create an app that allows users to signup to receive an email specific to their 
 ## Installation
 
 Extract to folder and access via command line using instructions below
+
 -Built using Python 3.5.1 and Django 1.9.4
 
 ## Usage
