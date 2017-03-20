@@ -6,7 +6,7 @@ Create an app that allows users to signup to receive an email specific to their 
 
 Extract to folder and access via command line using instructions below
 
--Built using Python 3.5.1 and Django 1.9.4
+-Built using Python 2.7.12 and Django 1.9.4
 
 ## Usage
 
