@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from signup.models import Subscriber
-from urllib.request import urlopen
+import urllib2
 from weather_email.send_email import SendEmail
 
 import json
@@ -10,7 +10,7 @@ class Command(BaseCommand):
 
 	def get_current_weather(self, location):
 		url = 'http://api.wunderground.com/api/675a3ab09ec5ada7/geolookup/conditions/q/' + location + '.json'
-		f = urlopen(url).read().decode('utf-8')
+		f = urllib2.urlopen(url).read().decode('utf-8')
 		parsed_json = json.loads(f)
 		city = parsed_json['location']['city']
 		state = parsed_json['location']['state']
@@ -22,7 +22,7 @@ class Command(BaseCommand):
 
 	def get_average_temp(self, location):
 		url = 'http://api.wunderground.com/api/675a3ab09ec5ada7/almanac/q/' + location + '.json'
-		f = urlopen(url).read().decode('utf-8')
+		f = urllib2.urlopen(url).read().decode('utf-8')
 		parsed_json = json.loads(f)
 		avg_temp_f = parsed_json['almanac']['temp_high']['normal']['F']
 		return avg_temp_f
@@ -36,8 +36,8 @@ class Command(BaseCommand):
 			message += " Current accumulated precipitation of " + str(precip) + " inches."
 		message += '</p>'
 		status = 'average'
-
-		if temp_difference > 5.0 or 'sun' in weather_description.lower():
+		nice_weather = ['sun', 'clear']
+		if temp_difference > 5.0 or any( x in weather_description.lower() for x in nice_weather):
 			status = 'nice_out'
 		elif precip > 0 or temp_difference < -5.0:
 			status = 'not_so_nice_out'
@@ -58,6 +58,7 @@ class Command(BaseCommand):
 		return recipient, subject, body
 
 	def send_emails(self):
+		email = SendEmail()
 		customers = Subscriber.objects.all()
 		#Make sure there are actually users to email first. If not, print out and exit
 		if len(customers) == 0:
@@ -65,7 +66,7 @@ class Command(BaseCommand):
 			return False
 		for cust in customers:
 			to, sub, body = self.create_email(cust)
-			SendEmail.send(to, sub, body)
+			email.send( to, sub, body)
 
 	def handle(self, *args, **options):
 		self.send_emails()

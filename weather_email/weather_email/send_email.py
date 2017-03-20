@@ -3,15 +3,18 @@ from email.mime.text import MIMEText
 
 #Module to send an email. Accepts a recipient, subject and body text and uses mailgun to send the email
 class SendEmail():
-	def send(to, subject, body):
+	def send(self, to, subject, body):
 		try:
+			g_user = "thomkitchenKLAVIYOTEST@gmail.com"
+			g_pass = "testtest1"
 			msg = MIMEText(body, 'html')
 			msg['Subject'] = subject
-			msg['From']    = "klaviyo_coding@challenge.com"
+			msg['From']    = "thomkitchenKLAVIYOTEST@gmail.com"
 			msg['To']      = to
 
-			s = smtplib.SMTP('smtp.mailgun.org', 587)
-			s.login('postmaster@sandbox0abca8b8d2d3490cb4455295e313b18c.mailgun.org', 'c3dc6f55bf4774a93c1ee09b0f36e0cc')
+			s = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+			s.ehlo()
+			s.login(g_user, g_pass)
 			s.sendmail(msg['From'], msg['To'], msg.as_string())
 			s.quit()
 			print("Successfully sent email to " + msg['to'])
